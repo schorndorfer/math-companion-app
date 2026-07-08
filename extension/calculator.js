@@ -3,15 +3,22 @@
 // Wires up the header's calculator toggle button and lazily mounts the
 // Desmos Scientific Calculator the first time the panel is expanded.
 let scientificCalculator = null;
+let calculatorMounting = false;
 
 function ensureScientificCalculatorMounted() {
-  if (scientificCalculator) return;
+  if (scientificCalculator || calculatorMounting) return;
+  calculatorMounting = true;
 
   const statusEl = document.getElementById("calcStatus");
   const errorEl = document.getElementById("calcError");
   const mountEl = document.getElementById("calcMount");
 
   loadDesmosCalculatorApi((err) => {
+    calculatorMounting = false;
+    statusEl.textContent = "";
+    errorEl.textContent = "";
+    errorEl.classList.add("hidden");
+
     if (err && err.message === "missing-key") {
       statusEl.textContent = "Add your Desmos API key in Settings — free at desmos.com/api";
       return;
@@ -21,7 +28,6 @@ function ensureScientificCalculatorMounted() {
       errorEl.classList.remove("hidden");
       return;
     }
-    statusEl.textContent = "";
     scientificCalculator = Desmos.ScientificCalculator(mountEl);
   });
 }
