@@ -193,4 +193,6 @@ el("contextBox").addEventListener("change", async () => {
   await chrome.storage.session.set({ contextText: el("contextBox").value });
 });
 
+attachMathPreview(el("chatInput"), el("chatMathPreview"));
+
 init();
