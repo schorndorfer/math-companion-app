@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Math Academy Companion</title>
+<link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <header>
+    <h1>Math Companion</h1>
+    <button id="settingsToggle" title="Settings">&#9881;</button>
+  </header>
+
+  <section id="settingsPanel" class="panel hidden">
+    <label for="backendUrl">Backend URL</label>
+    <input id="backendUrl" type="text" value="http://127.0.0.1:8420" />
+    <button id="saveSettings">Save</button>
+    <p id="healthStatus" class="muted"></p>
+  </section>
+
+  <section id="contextPanel" class="panel">
+    <label for="contextBox">What are you working on? (pinned context)</label>
+    <textarea id="contextBox" rows="3" placeholder="e.g. Systems of Linear Equations, elimination method — stuck on why I can't just add the equations as-is"></textarea>
+  </section>
+
+  <section id="chatPanel">
+    <div id="messages"></div>
+    <div id="chatError" class="error hidden"></div>
+    <div class="chatInputRow">
+      <textarea id="chatInput" rows="2" placeholder="Ask a question or say what you're stuck on..."></textarea>
+      <button id="sendBtn">Send</button>
+    </div>
+  </section>
+
+  <section id="logPanel" class="panel">
+    <button id="draftBtn">Draft topic log from this conversation</button>
+    <div id="logForm" class="hidden">
+      <label>Topic</label>
+      <input id="logTopic" type="text" />
+
+      <label>Status</label>
+      <select id="logStatus">
+        <option value="learning">learning</option>
+        <option value="reviewing">reviewing</option>
+        <option value="mastered">mastered</option>
+      </select>
+
+      <label>In my own words</label>
+      <textarea id="logExplanation" rows="3"></textarea>
+
+      <label>Common mistake</label>
+      <textarea id="logMistake" rows="2"></textarea>
+
+      <label>Prerequisites (comma-separated topic names)</label>
+      <input id="logPrereqs" type="text" placeholder="e.g. Solving Linear Equations, Substitution Method" />
+
+      <label>Tags (comma-separated)</label>
+      <input id="logTags" type="text" value="math-academy" />
+
+      <label>Lean snippet (optional)</label>
+      <textarea id="logLean" rows="3" placeholder="lean code, if applicable"></textarea>
+
+      <button id="saveTopicBtn">Save to vault</button>
+      <p id="saveStatus" class="muted"></p>
+    </div>
+  </section>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

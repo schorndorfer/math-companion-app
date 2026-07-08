@@ -1,0 +1,12 @@
+[project]
+name = "math-companion-backend"
+version = "0.1.0"
+description = "Local FastAPI backend for the Math Academy study companion Chrome extension"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.34",
+    "fastapi>=0.111",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "uvicorn[standard]>=0.30",
+]

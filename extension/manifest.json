@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Math Academy Companion",
+  "version": "0.1.0",
+  "description": "Socratic study companion side panel for Math Academy, with Obsidian-ready topic logging.",
+  "permissions": ["sidePanel", "storage"],
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*"],
+  "action": {
+    "default_title": "Open Math Companion"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
