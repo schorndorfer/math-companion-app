@@ -25,6 +25,7 @@ function renderMessages() {
     const div = document.createElement("div");
     div.className = `msg ${m.role}`;
     div.textContent = m.content;
+    renderMath(div);
     container.appendChild(div);
   }
   container.scrollTop = container.scrollHeight;
