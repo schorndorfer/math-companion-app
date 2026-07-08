@@ -8,7 +8,10 @@
 <body>
   <header>
     <h1>Math Companion</h1>
-    <button id="settingsToggle" title="Settings">&#9881;</button>
+    <div class="headerActions">
+      <button id="calcToggle" class="iconButton" title="Scientific Calculator">&#129518;</button>
+      <button id="settingsToggle" class="iconButton" title="Settings">&#9881;</button>
+    </div>
   </header>
 
   <section id="settingsPanel" class="panel hidden">
@@ -20,6 +23,13 @@
 
     <button id="saveSettings">Save</button>
     <p id="healthStatus" class="muted"></p>
+  </section>
+
+  <section id="calcPanel" class="panel hidden">
+    <p id="calcStatus" class="muted"></p>
+    <p id="calcError" class="error hidden"></p>
+    <div id="calcMount" class="calcMount"></div>
+    <button id="openGraphingBtn">Open Graphing Calculator &#8599;</button>
   </section>
 
   <section id="contextPanel" class="panel">
@@ -69,6 +79,8 @@
     </div>
   </section>
 
+  <script src="desmos-loader.js"></script>
+  <script src="calculator.js"></script>
   <script src="sidepanel.js"></script>
 </body>
 </html>
