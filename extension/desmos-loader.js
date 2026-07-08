@@ -23,5 +23,5 @@ function loadDesmosCalculatorApi(callback) {
     script.onload = () => callback(null);
     script.onerror = () => callback(new Error("load-error"));
     document.head.appendChild(script);
-  });
+  }).catch(() => callback(new Error("load-error")));
 }
