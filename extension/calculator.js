@@ -39,3 +39,12 @@ document.getElementById("calcToggle").addEventListener("click", () => {
     ensureScientificCalculatorMounted();
   }
 });
+
+document.getElementById("openGraphingBtn").addEventListener("click", () => {
+  chrome.windows.create({
+    url: chrome.runtime.getURL("graphing.html"),
+    type: "popup",
+    width: 900,
+    height: 700,
+  });
+});
