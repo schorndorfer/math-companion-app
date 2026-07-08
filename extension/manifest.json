@@ -13,8 +13,5 @@
   },
   "background": {
     "service_worker": "background.js"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval' https://www.desmos.com; object-src 'self';"
   }
 }

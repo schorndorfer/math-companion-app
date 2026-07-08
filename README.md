@@ -51,21 +51,11 @@ You should see it come up on `http://127.0.0.1:8420`. Leave this running while y
 3. Click **Load unpacked** and select the `extension/` folder.
 4. Pin the extension (puzzle-piece icon in the toolbar → pin) so it's easy to reach.
 
-## 4. Get a Desmos API key (for the calculators)
-
-The side panel includes an embedded scientific calculator and a pop-out graphing calculator, both powered by Desmos.
-
-1. Go to [desmos.com/api](https://www.desmos.com/api) and sign up for a free API key (personal/education use).
-2. Open the side panel, click the settings gear (⚙️), and paste the key into "Desmos API key".
-3. Click Save.
-
-Until a key is added, clicking the 🧮 calculator icon or "Open Graphing Calculator" will show a reminder to add one instead of a blank/broken calculator.
-
-## 5. Use it
+## 4. Use it
 
 1. Open Math Academy in a tab.
 2. Click the extension icon — the side panel opens next to your tab.
-3. Click the 🧮 icon to open a quick scientific calculator inline, or use "Open Graphing Calculator" inside that panel for a full graphing window.
+3. Click the 🧮 icon to open a quick embedded scientific calculator (Desmos), or use "Open Graphing Calculator" inside that panel for a full graphing window — no signup or setup needed for either.
 4. Type what you're working on into the "What are you working on?" box at the top — this stays pinned and gets sent along with every chat message, so you don't have to repeat yourself each turn.
 5. Chat normally below. The companion asks what you've tried before explaining, gives hints in stages, and won't just hand you the answer — that's intentional (see `backend/prompts/system_prompt.md` if you want to tune the personality or rules).
 6. When you've worked through a topic, click **Draft topic log from this conversation**. It'll propose a topic name, a plain-language explanation, a common mistake, prerequisite topics, and a Lean snippet if one came up — review/edit any of it, then **Save to vault**.

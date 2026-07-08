@@ -18,17 +18,12 @@
     <label for="backendUrl">Backend URL</label>
     <input id="backendUrl" type="text" value="http://127.0.0.1:8420" />
 
-    <label for="desmosApiKey">Desmos API key</label>
-    <input id="desmosApiKey" type="text" placeholder="Get a free key at desmos.com/api" />
-
     <button id="saveSettings">Save</button>
     <p id="healthStatus" class="muted"></p>
   </section>
 
   <section id="calcPanel" class="panel hidden">
-    <p id="calcStatus" class="muted"></p>
-    <p id="calcError" class="error hidden"></p>
-    <div id="calcMount" class="calcMount"></div>
+    <iframe id="calcFrame" class="calcMount" title="Desmos Scientific Calculator"></iframe>
     <button id="openGraphingBtn">Open Graphing Calculator &#8599;</button>
   </section>
 
@@ -79,7 +74,6 @@
     </div>
   </section>
 
-  <script src="desmos-loader.js"></script>
   <script src="calculator.js"></script>
   <script src="sidepanel.js"></script>
 </body>

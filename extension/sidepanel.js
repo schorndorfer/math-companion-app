@@ -6,10 +6,9 @@ let messages = []; // { role: "user" | "assistant", content: string }
 const el = (id) => document.getElementById(id);
 
 async function init() {
-  const stored = await chrome.storage.local.get(["backendUrl", "desmosApiKey"]);
+  const stored = await chrome.storage.local.get(["backendUrl"]);
   backendUrl = stored.backendUrl || DEFAULT_BACKEND_URL;
   el("backendUrl").value = backendUrl;
-  el("desmosApiKey").value = stored.desmosApiKey || "";
 
   const session = await chrome.storage.session.get(["messages", "contextText"]);
   messages = session.messages || [];
@@ -186,8 +185,7 @@ el("settingsToggle").addEventListener("click", () => {
 });
 el("saveSettings").addEventListener("click", async () => {
   backendUrl = el("backendUrl").value.trim() || DEFAULT_BACKEND_URL;
-  const desmosApiKey = el("desmosApiKey").value.trim();
-  await chrome.storage.local.set({ backendUrl, desmosApiKey });
+  await chrome.storage.local.set({ backendUrl });
   checkHealth();
 });
 el("contextBox").addEventListener("change", async () => {
