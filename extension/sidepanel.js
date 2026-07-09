@@ -25,6 +25,7 @@ function renderMessages() {
     const div = document.createElement("div");
     div.className = `msg ${m.role}`;
     div.textContent = m.content;
+    renderMath(div);
     container.appendChild(div);
   }
   container.scrollTop = container.scrollHeight;
@@ -61,6 +62,7 @@ async function sendMessage() {
   messages.push({ role: "user", content: text });
   renderMessages();
   input.value = "";
+  setMathPreview(el("chatMathPreview"), "");
   el("sendBtn").disabled = true;
 
   try {
@@ -115,7 +117,9 @@ async function draftTopicLog() {
     el("logTopic").value = draft.topic || "";
     el("logStatus").value = draft.status || "learning";
     el("logExplanation").value = draft.explanation || "";
+    setMathPreview(el("logExplanationPreview"), draft.explanation);
     el("logMistake").value = draft.mistake || "";
+    setMathPreview(el("logMistakePreview"), draft.mistake);
     el("logPrereqs").value = (draft.prerequisites || []).join(", ");
     el("logTags").value = (draft.tags || ["math-academy"]).join(", ");
     el("logLean").value = draft.lean_snippet || "";
@@ -191,5 +195,9 @@ el("saveSettings").addEventListener("click", async () => {
 el("contextBox").addEventListener("change", async () => {
   await chrome.storage.session.set({ contextText: el("contextBox").value });
 });
+
+attachMathPreview(el("chatInput"), el("chatMathPreview"));
+attachMathPreview(el("logExplanation"), el("logExplanationPreview"));
+attachMathPreview(el("logMistake"), el("logMistakePreview"));
 
 init();

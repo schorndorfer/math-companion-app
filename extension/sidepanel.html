@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <title>Math Academy Companion</title>
 <link rel="stylesheet" href="sidepanel.css" />
+<link rel="stylesheet" href="vendor/katex/katex.min.css" />
 </head>
 <body>
   <header>
@@ -36,9 +37,10 @@
     <div id="messages"></div>
     <div id="chatError" class="error hidden"></div>
     <div class="chatInputRow">
-      <textarea id="chatInput" rows="2" placeholder="Ask a question or say what you're stuck on..."></textarea>
+      <textarea id="chatInput" rows="2" placeholder="Ask a question or say what you're stuck on... Type math like $x^2+1$"></textarea>
       <button id="sendBtn">Send</button>
     </div>
+    <div id="chatMathPreview" class="mathPreview hidden"></div>
   </section>
 
   <section id="logPanel" class="panel">
@@ -56,9 +58,11 @@
 
       <label>In my own words</label>
       <textarea id="logExplanation" rows="3"></textarea>
+      <div id="logExplanationPreview" class="mathPreview hidden"></div>
 
       <label>Common mistake</label>
       <textarea id="logMistake" rows="2"></textarea>
+      <div id="logMistakePreview" class="mathPreview hidden"></div>
 
       <label>Prerequisites (comma-separated topic names)</label>
       <input id="logPrereqs" type="text" placeholder="e.g. Solving Linear Equations, Substitution Method" />
@@ -74,6 +78,9 @@
     </div>
   </section>
 
+  <script src="vendor/katex/katex.min.js"></script>
+  <script src="vendor/katex/auto-render.min.js"></script>
+  <script src="math-render.js"></script>
   <script src="calculator.js"></script>
   <script src="sidepanel.js"></script>
 </body>
