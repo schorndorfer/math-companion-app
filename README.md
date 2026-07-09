@@ -57,7 +57,7 @@ You should see it come up on `http://127.0.0.1:8420`. Leave this running while y
 2. Click the extension icon — the side panel opens next to your tab.
 3. Click the 🧮 icon to open a quick embedded scientific calculator (Desmos), or use "Open Graphing Calculator" inside that panel for a full graphing window — no signup or setup needed for either.
 4. Type what you're working on into the "What are you working on?" box at the top — this stays pinned and gets sent along with every chat message, so you don't have to repeat yourself each turn.
-5. Chat normally below. The companion asks what you've tried before explaining, gives hints in stages, and won't just hand you the answer — that's intentional (see `backend/prompts/system_prompt.md` if you want to tune the personality or rules).
+5. Chat normally below. The companion asks what you've tried before explaining, gives hints in stages, and won't just hand you the answer — that's intentional (see `backend/prompts/system_prompt.md` if you want to tune the personality or rules). Math renders automatically — type LaTeX like `$x^2+1$` for inline math or `$$...$$` for a standalone equation, and a live preview shows below the input as you type.
 6. When you've worked through a topic, click **Draft topic log from this conversation**. It'll propose a topic name, a plain-language explanation, a common mistake, prerequisite topics, and a Lean snippet if one came up — review/edit any of it, then **Save to vault**.
 7. Open your Obsidian vault and look at Graph View — topics you've logged with prerequisites will show up as linked nodes, mirroring Math Academy's own prerequisite structure but built from what you actually worked through.
 
