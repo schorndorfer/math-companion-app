@@ -118,7 +118,23 @@ async function draftTopicLog() {
     el("logTopic").value = draft.topic || "";
     el("logStatus").value = draft.status || "learning";
     el("logExplanation").value = draft.explanation || "";
+    if (draft.explanation && draft.explanation.trim()) {
+      el("logExplanationPreview").classList.remove("hidden");
+      el("logExplanationPreview").textContent = draft.explanation;
+      renderMath(el("logExplanationPreview"));
+    } else {
+      el("logExplanationPreview").classList.add("hidden");
+      el("logExplanationPreview").textContent = "";
+    }
     el("logMistake").value = draft.mistake || "";
+    if (draft.mistake && draft.mistake.trim()) {
+      el("logMistakePreview").classList.remove("hidden");
+      el("logMistakePreview").textContent = draft.mistake;
+      renderMath(el("logMistakePreview"));
+    } else {
+      el("logMistakePreview").classList.add("hidden");
+      el("logMistakePreview").textContent = "";
+    }
     el("logPrereqs").value = (draft.prerequisites || []).join(", ");
     el("logTags").value = (draft.tags || ["math-academy"]).join(", ");
     el("logLean").value = draft.lean_snippet || "";
@@ -196,5 +212,7 @@ el("contextBox").addEventListener("change", async () => {
 });
 
 attachMathPreview(el("chatInput"), el("chatMathPreview"));
+attachMathPreview(el("logExplanation"), el("logExplanationPreview"));
+attachMathPreview(el("logMistake"), el("logMistakePreview"));
 
 init();
