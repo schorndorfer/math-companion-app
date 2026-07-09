@@ -62,6 +62,8 @@ async function sendMessage() {
   messages.push({ role: "user", content: text });
   renderMessages();
   input.value = "";
+  el("chatMathPreview").classList.add("hidden");
+  el("chatMathPreview").textContent = "";
   el("sendBtn").disabled = true;
 
   try {
