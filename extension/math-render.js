@@ -20,6 +20,21 @@ function renderMath(el) {
   });
 }
 
+// Fills previewEl with text and renders it via renderMath, or hides previewEl
+// when text is empty/whitespace-only. Shared by attachMathPreview's debounce
+// callback and any code that populates a preview from a programmatic value
+// assignment (which doesn't fire an "input" event on its own).
+function setMathPreview(previewEl, text) {
+  if (text && text.trim()) {
+    previewEl.classList.remove("hidden");
+    previewEl.textContent = text;
+    renderMath(previewEl);
+  } else {
+    previewEl.classList.add("hidden");
+    previewEl.textContent = "";
+  }
+}
+
 // Wires a debounced live preview: as sourceEl (an <input>/<textarea>) is
 // typed into, previewEl is filled with the raw text and rendered via
 // renderMath. previewEl is hidden whenever the source is empty.
@@ -28,15 +43,7 @@ function attachMathPreview(sourceEl, previewEl, delayMs = 150) {
   sourceEl.addEventListener("input", () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      const text = sourceEl.value;
-      if (!text.trim()) {
-        previewEl.classList.add("hidden");
-        previewEl.textContent = "";
-        return;
-      }
-      previewEl.classList.remove("hidden");
-      previewEl.textContent = text;
-      renderMath(previewEl);
+      setMathPreview(previewEl, sourceEl.value);
     }, delayMs);
   });
 }
