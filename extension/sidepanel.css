@@ -59,7 +59,7 @@ label {
 
 label:first-child { margin-top: 0; }
 
-input[type="text"], textarea, select {
+input[type="text"], textarea, select, .mathInput {
   width: 100%;
   font-size: 13px;
   padding: 6px 8px;
@@ -67,6 +67,33 @@ input[type="text"], textarea, select {
   border-radius: 6px;
   font-family: inherit;
   resize: vertical;
+}
+
+.mathInput {
+  min-height: 36px;
+  max-height: 160px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  outline: none;
+}
+
+.mathInput.mathInputTall {
+  min-height: 60px;
+}
+
+.mathInput:empty:before {
+  content: attr(data-placeholder);
+  color: #999;
+}
+
+.mathWidget {
+  cursor: text;
+  border-radius: 3px;
+}
+
+.mathWidget:hover {
+  background: #eef2f7;
 }
 
 button {
@@ -120,7 +147,7 @@ button:hover { background: #2c5282; }
   gap: 6px;
 }
 
-.chatInputRow textarea {
+.chatInputRow .mathInput {
   flex: 1;
 }
 
@@ -138,15 +165,6 @@ button:hover { background: #2c5282; }
 .muted {
   color: #888;
   font-size: 12px;
-}
-
-.mathPreview {
-  margin: 4px 0 8px;
-  padding: 8px 10px;
-  border: 1px dashed #ccc;
-  border-radius: 6px;
-  background: #fafafa;
-  font-size: 13px;
 }
 
 .katex { font-size: 1em; }

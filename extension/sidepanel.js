@@ -2,6 +2,7 @@ const DEFAULT_BACKEND_URL = "http://127.0.0.1:8420";
 
 let backendUrl = DEFAULT_BACKEND_URL;
 let messages = []; // { role: "user" | "assistant", content: string }
+let detectedPrerequisites = []; // prerequisite topic names for the currently detected topic
 
 const el = (id) => document.getElementById(id);
 
@@ -10,12 +11,49 @@ async function init() {
   backendUrl = stored.backendUrl || DEFAULT_BACKEND_URL;
   el("backendUrl").value = backendUrl;
 
-  const session = await chrome.storage.session.get(["messages", "contextText"]);
+  const session = await chrome.storage.session.get([
+    "messages",
+    "contextText",
+    "detectedTopic",
+    "detectedPrerequisites",
+  ]);
   messages = session.messages || [];
   el("contextBox").value = session.contextText || "";
+  detectedPrerequisites = session.detectedPrerequisites || [];
   renderMessages();
 
+  if (session.detectedTopic) {
+    applyDetectedTopic(session.detectedTopic);
+  }
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== "session") return;
+    if (changes.detectedTopic) {
+      applyDetectedTopic(changes.detectedTopic.newValue);
+    }
+    if (changes.detectedPrerequisites) {
+      detectedPrerequisites = changes.detectedPrerequisites.newValue || [];
+    }
+  });
+
   checkHealth();
+}
+
+// Silently keeps the context box in sync with whatever topic the content
+// script detects on the page, overwriting any manually-typed text.
+function applyDetectedTopic(topic) {
+  if (!topic) return;
+  el("contextBox").value = topic;
+  chrome.storage.session.set({ contextText: topic });
+}
+
+// Builds the context string sent to the backend: the student's own
+// (possibly auto-filled) context text, plus the detected topic's
+// prerequisites, if any, so the tutor can align with what Math Academy
+// already assumes the student knows.
+function buildChatContext() {
+  const context = el("contextBox").value.trim();
+  if (!context || detectedPrerequisites.length === 0) return context || null;
+  return `${context}\n\nPrerequisite topics for this material: ${detectedPrerequisites.join(", ")}`;
 }
 
 function renderMessages() {
@@ -55,14 +93,13 @@ async function checkHealth() {
 
 async function sendMessage() {
   const input = el("chatInput");
-  const text = input.value.trim();
+  const text = getInlineMathValue(input).trim();
   if (!text) return;
 
   clearError();
   messages.push({ role: "user", content: text });
   renderMessages();
-  input.value = "";
-  setMathPreview(el("chatMathPreview"), "");
+  input.innerHTML = "";
   el("sendBtn").disabled = true;
 
   try {
@@ -71,7 +108,7 @@ async function sendMessage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         messages,
-        context: el("contextBox").value.trim() || null,
+        context: buildChatContext(),
       }),
     });
     if (!res.ok) {
@@ -116,10 +153,8 @@ async function draftTopicLog() {
     }
     el("logTopic").value = draft.topic || "";
     el("logStatus").value = draft.status || "learning";
-    el("logExplanation").value = draft.explanation || "";
-    setMathPreview(el("logExplanationPreview"), draft.explanation);
-    el("logMistake").value = draft.mistake || "";
-    setMathPreview(el("logMistakePreview"), draft.mistake);
+    setInlineMathValue(el("logExplanation"), draft.explanation || "");
+    setInlineMathValue(el("logMistake"), draft.mistake || "");
     el("logPrereqs").value = (draft.prerequisites || []).join(", ");
     el("logTags").value = (draft.tags || ["math-academy"]).join(", ");
     el("logLean").value = draft.lean_snippet || "";
@@ -149,8 +184,8 @@ async function saveTopic() {
 
   const payload = {
     topic,
-    explanation: el("logExplanation").value.trim(),
-    mistake: el("logMistake").value.trim(),
+    explanation: getInlineMathValue(el("logExplanation")).trim(),
+    mistake: getInlineMathValue(el("logMistake")).trim(),
     prerequisites: splitCsv(el("logPrereqs").value),
     tags: splitCsv(el("logTags").value),
     lean_snippet: el("logLean").value.trim(),
@@ -175,12 +210,6 @@ async function saveTopic() {
 }
 
 el("sendBtn").addEventListener("click", sendMessage);
-el("chatInput").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
 el("draftBtn").addEventListener("click", draftTopicLog);
 el("saveTopicBtn").addEventListener("click", saveTopic);
 
@@ -196,8 +225,14 @@ el("contextBox").addEventListener("change", async () => {
   await chrome.storage.session.set({ contextText: el("contextBox").value });
 });
 
-attachMathPreview(el("chatInput"), el("chatMathPreview"));
-attachMathPreview(el("logExplanation"), el("logExplanationPreview"));
-attachMathPreview(el("logMistake"), el("logMistakePreview"));
+setupInlineMathInput(el("chatInput"), {
+  onEnter: (e) => {
+    if (e.shiftKey) return false; // let the default handler insert a line break
+    sendMessage();
+    return true;
+  },
+});
+setupInlineMathInput(el("logExplanation"));
+setupInlineMathInput(el("logMistake"));
 
 init();

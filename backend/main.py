@@ -5,6 +5,7 @@ instead of calling Anthropic directly, so the API key never has to live
 in extension code.
 """
 import json
+import logging
 import re
 from typing import List, Optional
 
@@ -16,6 +17,9 @@ from pydantic import BaseModel
 
 import vault
 from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL, HOST, PORT, get_system_prompt
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger("math_companion")
 
 app = FastAPI(title="Math Academy Companion Backend")
 
@@ -80,6 +84,7 @@ def chat(req: ChatRequest):
     system = get_system_prompt()
     if req.context:
         system += f"\n\n## Current context (from the student)\n{req.context}"
+    logger.info("chat context: %r", req.context)
 
     try:
         response = client.messages.create(

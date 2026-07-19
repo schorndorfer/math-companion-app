@@ -56,21 +56,20 @@ You should see it come up on `http://127.0.0.1:8420`. Leave this running while y
 1. Open Math Academy in a tab.
 2. Click the extension icon — the side panel opens next to your tab.
 3. Click the 🧮 icon to open a quick embedded scientific calculator (Desmos), or use "Open Graphing Calculator" inside that panel for a full graphing window — no signup or setup needed for either.
-4. Type what you're working on into the "What are you working on?" box at the top — this stays pinned and gets sent along with every chat message, so you don't have to repeat yourself each turn.
-5. Chat normally below. The companion asks what you've tried before explaining, gives hints in stages, and won't just hand you the answer — that's intentional (see `backend/prompts/system_prompt.md` if you want to tune the personality or rules). Math renders automatically — type LaTeX like `$x^2+1$` for inline math or `$$...$$` for a standalone equation, and a live preview shows below the input as you type.
+4. The "What are you working on?" box at the top auto-fills with the topic of the Math Academy page you have open, and keeps itself in sync as you navigate — you can still edit it by hand, but it'll be overwritten next time the detected topic changes. This stays pinned and gets sent along with every chat message, so you don't have to repeat yourself each turn.
+5. Chat normally below. The companion asks what you've tried before explaining, gives hints in stages, and won't just hand you the answer — that's intentional (see `backend/prompts/system_prompt.md` if you want to tune the personality or rules). Math renders inline as you type — write LaTeX like `$x^2+1$` for inline math or `$$...$$` for a standalone equation, and once you finish the closing delimiter it renders in place; click a rendered expression to edit its LaTeX again.
 6. When you've worked through a topic, click **Draft topic log from this conversation**. It'll propose a topic name, a plain-language explanation, a common mistake, prerequisite topics, and a Lean snippet if one came up — review/edit any of it, then **Save to vault**.
 7. Open your Obsidian vault and look at Graph View — topics you've logged with prerequisites will show up as linked nodes, mirroring Math Academy's own prerequisite structure but built from what you actually worked through.
 
 ## Notes and known limitations
 
 - **The backend must be running** for the side panel to work. If you see "Backend not reachable," check the terminal where you ran `uv run python main.py`.
-- **Context capture is manual** (by design, for v1) — the extension doesn't read the Math Academy page itself. You tell it what you're working on. This was a deliberate tradeoff: reading Math Academy's page reliably would require reverse-engineering their DOM, which breaks silently if they change their site.
+- **Context auto-detection reads the topic ID straight from the URL.** A content script on `www.mathacademy.com` extracts the topic ID from the page URL (e.g. `/topics/1427` or `/tasks/{id}/topics/1427/review`) and fetches the topic's name and prerequisite list from its overview page. It always overwrites the context box, including any text you've typed by hand, whenever the detected topic changes — the manual context box is still there as a fallback if you're on a page it can't read. The detected prerequisites (just topic names, not their content) are sent along with every chat message too, so the tutor can align with what Math Academy assumes you already know instead of guessing.
 - **Chat history is per-browser-session** (`chrome.storage.session`) — it clears when you close Chrome, but survives closing/reopening the side panel. Topic-log drafts pull from whatever's in that history, so draft a log before closing the browser if you want it captured.
 - **The backend binds to 127.0.0.1 only.** Don't change `HOST` in `.env` to `0.0.0.0` unless you understand the implications — CORS is currently wide open (`*`) on the assumption that only local processes can reach it.
 - **Model name**: `backend/config.py` defaults to `claude-sonnet-5`. If Anthropic renames or retires a model, check [docs.claude.com](https://docs.claude.com) for the current slug and set `ANTHROPIC_MODEL` in `.env`.
 
 ## Natural next steps (not built yet)
 
-- Auto-reading the Math Academy page via a content script, once the manual version has proven itself worth keeping open daily.
 - A "Related topics" search so the log form can autocomplete prerequisites from what's already in your vault (the backend's `/topics` endpoint already lists existing notes — just needs wiring into the UI).
 - Packaging the backend as a background service (e.g. a launchd/systemd unit) so you don't have to remember to start it manually.
