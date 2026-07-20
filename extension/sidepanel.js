@@ -3,6 +3,7 @@ const DEFAULT_BACKEND_URL = "http://127.0.0.1:8420";
 let backendUrl = DEFAULT_BACKEND_URL;
 let messages = []; // { role: "user" | "assistant", content: string }
 let detectedPrerequisites = []; // prerequisite topic names for the currently detected topic
+let lastTopicValue = ""; // last known value of the topic box, used to detect topic changes
 
 const el = (id) => document.getElementById(id);
 
@@ -18,7 +19,8 @@ async function init() {
     "detectedPrerequisites",
   ]);
   messages = session.messages || [];
-  el("contextBox").value = session.contextText || "";
+  lastTopicValue = session.contextText || "";
+  el("contextBox").value = lastTopicValue;
   detectedPrerequisites = session.detectedPrerequisites || [];
   renderMessages();
 
@@ -38,10 +40,22 @@ async function init() {
   checkHealth();
 }
 
+// Clears the chat history when the topic changes, since prior messages
+// are no longer relevant to the new topic.
+function clearChatHistory() {
+  messages = [];
+  renderMessages();
+  chrome.storage.session.set({ messages: [] });
+}
+
 // Silently keeps the context box in sync with whatever topic the content
 // script detects on the page, overwriting any manually-typed text.
 function applyDetectedTopic(topic) {
   if (!topic) return;
+  if (topic !== lastTopicValue) {
+    lastTopicValue = topic;
+    clearChatHistory();
+  }
   el("contextBox").value = topic;
   chrome.storage.session.set({ contextText: topic });
 }
@@ -222,7 +236,12 @@ el("saveSettings").addEventListener("click", async () => {
   checkHealth();
 });
 el("contextBox").addEventListener("change", async () => {
-  await chrome.storage.session.set({ contextText: el("contextBox").value });
+  const newValue = el("contextBox").value;
+  if (newValue !== lastTopicValue) {
+    lastTopicValue = newValue;
+    clearChatHistory();
+  }
+  await chrome.storage.session.set({ contextText: newValue });
 });
 
 setupInlineMathInput(el("chatInput"), {
